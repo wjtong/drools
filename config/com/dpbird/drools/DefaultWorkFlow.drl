@@ -1,0 +1,19 @@
+package com.dpbird.drools
+
+rule "First Activity"
+    dialect "mvel"
+    when
+        workFlow : WorkFlow(statusId == "WEPR_PLANNING")
+    then
+        modify ( workFlow ) { statusId = "WEPR_IN_PROGRESS",
+                       activeActivityName = "reviewer" };
+end
+
+rule "Review Activity"
+    dialect "mvel"
+    when
+        workFlow : WorkFlow(statusId = "WEPR_IN_PROGRESS")
+        activity : Activity(statusId = "WEPR_COMPLETE")
+    then
+        modify ( workFlow ) { activeActivityName = "approver" };
+end
