@@ -5,4 +5,7 @@
     <kbase packages="com.dpbird.drools.test">
         <ksession name="HelloWorldKS"/>
     </kbase>
+    <kbase packages="com.dpbird.drools">
+        <ksession name="WorkFlowKS"/>
+    </kbase>
 </kmodule>

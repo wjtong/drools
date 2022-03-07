@@ -6,6 +6,9 @@ import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
+import org.kie.api.KieServices;
+import org.kie.api.runtime.KieContainer;
+import org.kie.api.runtime.KieSession;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +17,7 @@ public class DefaultWorkFlow implements WorkFlow {
     private String workFlowId;
     private Delegator delegator;
     private GenericValue workFlowWorkEffort;
-    private Activity activeActivity;
+    private Activity activeActivity = null;
     private String statusId;
 
     public DefaultWorkFlow(Delegator delegator, String workFlowId) {
@@ -25,6 +28,21 @@ public class DefaultWorkFlow implements WorkFlow {
         } catch (GenericEntityException e) {
             e.printStackTrace();
         }
+        fireRules();
+    }
+
+    private void fireRules() {
+        KieServices ks = KieServices.get();
+        KieContainer kc = ks.getKieClasspathContainer();
+        KieSession ksession = kc.newKieSession("WorkFlowKS");
+        ksession.insert(this);
+        if (activeActivity != null) {
+            ksession.insert(activeActivity);
+        }
+        // and fire the rules
+        ksession.fireAllRules();
+        // and then dispose the session
+        ksession.dispose();
     }
 
     @Override

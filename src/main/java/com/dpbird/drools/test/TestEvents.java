@@ -1,5 +1,6 @@
 package com.dpbird.drools.test;
 
+import com.dpbird.workflow.WorkFlowUtil;
 import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
@@ -110,6 +111,17 @@ public class TestEvents {
             list.add( this );
             return this.message.equals( msg );
         }
+    }
+    public static Object createWorkFlow(HttpServletRequest request, Map<String, Object> actionParameters)
+            throws GenericEntityException, GenericServiceException, CartItemModifyException {
+        Delegator delegator = (Delegator) request.getAttribute("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        GenericValue userLogin = (GenericValue) request.getAttribute("userLogin");
+        String custRequestId = (String) actionParameters.get("custRequestId");
+        GenericValue custRequest = delegator.findOne("CustRequest", false, UtilMisc.toMap("custRequestId", custRequestId));
+
+        WorkFlowUtil.createWorkFlow(custRequest);
+        return null;
     }
 
 }
