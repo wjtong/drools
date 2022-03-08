@@ -1,4 +1,6 @@
 package com.dpbird.drools
+import com.dpbird.workflow.WorkFlow;
+import com.dpbird.workflow.Activity;
 
 rule "First Activity"
     dialect "mvel"
@@ -6,14 +8,23 @@ rule "First Activity"
         workFlow : WorkFlow(statusId == "WEPR_PLANNING")
     then
         modify ( workFlow ) { statusId = "WEPR_IN_PROGRESS",
-                       activeActivityName = "reviewer" };
+                       activeName = "reviewer" };
 end
 
 rule "Review Activity"
     dialect "mvel"
     when
-        workFlow : WorkFlow(statusId = "WEPR_IN_PROGRESS")
-        activity : Activity(statusId = "WEPR_COMPLETE")
+        workFlow : WorkFlow(statusId == "WEPR_IN_PROGRESS")
+        activity : Activity(statusId == "WEPR_COMPLETE", activityName == "reviewer")
     then
-        modify ( workFlow ) { activeActivityName = "approver" };
+        modify ( workFlow ) { activeName = "approver" };
+end
+
+rule "Approve Activity"
+    dialect "mvel"
+    when
+        workFlow : WorkFlow(statusId == "WEPR_IN_PROGRESS")
+        activity : Activity(statusId == "WEPR_COMPLETE", activityName == "approver")
+    then
+        modify ( workFlow ) { statusId = "WEPR_COMPLETE" };
 end

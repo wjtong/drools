@@ -7,6 +7,9 @@ import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
 import org.kie.api.KieServices;
+import org.kie.api.event.rule.DebugAgendaEventListener;
+import org.kie.api.event.rule.DebugRuleRuntimeEventListener;
+import org.kie.api.logger.KieRuntimeLogger;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 
@@ -24,23 +27,35 @@ public class DefaultWorkFlow implements WorkFlow {
         this.delegator = delegator;
         this.workFlowId = workFlowId;
         try {
-            this.workFlowWorkEffort = delegator.findOne("WorkEffort", UtilMisc.toMap("workEffortId", workFlowId), true);
+            this.workFlowWorkEffort = delegator.findOne("WorkEffort", UtilMisc.toMap("workEffortId", workFlowId), false);
+            statusId = workFlowWorkEffort.getString("currentStatusId");
         } catch (GenericEntityException e) {
             e.printStackTrace();
         }
-        fireRules();
+        if (statusId.equals("WEPR_PLANNING")) {
+            fireRules();
+        }
     }
 
     private void fireRules() {
         KieServices ks = KieServices.get();
         KieContainer kc = ks.getKieClasspathContainer();
         KieSession ksession = kc.newKieSession("WorkFlowKS");
+        // The application can also setup listeners
+        ksession.addEventListener( new DebugAgendaEventListener() );
+        ksession.addEventListener( new DebugRuleRuntimeEventListener() );
+
+        // Set up a file based audit logger
+        KieRuntimeLogger logger = ks.getLoggers().newFileLogger( ksession, "./workflow" );
+
         ksession.insert(this);
         if (activeActivity != null) {
             ksession.insert(activeActivity);
         }
         // and fire the rules
         ksession.fireAllRules();
+        // Close logger
+        logger.close();
         // and then dispose the session
         ksession.dispose();
     }
@@ -51,8 +66,11 @@ public class DefaultWorkFlow implements WorkFlow {
     }
 
     @Override
-    public String completeActivity(String activityId, String code, String note, Map<String, Object> infoMap) {
-        return null;
+    public void completeActivity(String activityId, String code, String note, Map<String, Object> infoMap) {
+        Activity activity = new DefaultActivity(delegator, activityId);
+        activity.completeActivity(code, note, infoMap);
+        this.activeActivity = activity;
+        fireRules();
     }
 
     @Override
@@ -67,7 +85,7 @@ public class DefaultWorkFlow implements WorkFlow {
 
     @Override
     public void setActiveName(String activeName) {
-        Activity activity = new DefaultActivity(delegator, activeName);
+        Activity activity = new DefaultActivity(delegator, workFlowId, activeName);
         this.activeActivity = activity;
     }
 

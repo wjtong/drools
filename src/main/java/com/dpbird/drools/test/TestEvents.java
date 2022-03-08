@@ -112,6 +112,7 @@ public class TestEvents {
             return this.message.equals( msg );
         }
     }
+
     public static Object createWorkFlow(HttpServletRequest request, Map<String, Object> actionParameters)
             throws GenericEntityException, GenericServiceException, CartItemModifyException {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
@@ -121,6 +122,19 @@ public class TestEvents {
         GenericValue custRequest = delegator.findOne("CustRequest", false, UtilMisc.toMap("custRequestId", custRequestId));
 
         WorkFlowUtil.createWorkFlow(custRequest);
+        return null;
+    }
+
+    public static Object completeActivity(HttpServletRequest request, Map<String, Object> actionParameters)
+            throws GenericEntityException, GenericServiceException, CartItemModifyException {
+        Delegator delegator = (Delegator) request.getAttribute("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        GenericValue userLogin = (GenericValue) request.getAttribute("userLogin");
+        String activityId = (String) actionParameters.get("activityId");
+        String code = (String) actionParameters.get("code");
+        String note = (String) actionParameters.get("note");
+
+        WorkFlowUtil.completeActivity(delegator, activityId, code, note, null);
         return null;
     }
 

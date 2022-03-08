@@ -14,7 +14,7 @@ public interface WorkFlow {
      * @param infoMap 其它参数
      * @return String 下一个节点的workEffortId
      */
-    public String completeActivity(String activityId, String code, String note, Map<String, Object> infoMap);
+    public void completeActivity(String activityId, String code, String note, Map<String, Object> infoMap);
 
     public String getStatusId();
     public String getActiveName();
