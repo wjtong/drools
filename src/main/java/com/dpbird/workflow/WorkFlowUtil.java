@@ -1,17 +1,16 @@
 package com.dpbird.workflow;
 
-import org.apache.ofbiz.base.util.UtilMisc;
-import org.apache.ofbiz.base.util.UtilValidate;
+import org.apache.ofbiz.base.util.*;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericPK;
 import org.apache.ofbiz.entity.GenericValue;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class WorkFlowUtil {
+    public static final String module = WorkFlowUtil.class.getName();
+
     // 传入的参数可能是代表项目的WorkEffort，也可能是CustRequest等其它需要审批的对象
     public static WorkFlow createWorkFlow(GenericValue genericValue) throws GenericEntityException {
         if (genericValue == null) {
@@ -34,8 +33,23 @@ public class WorkFlowUtil {
         }
 
         // 保存genericValue和WorkEffort(workflow)之间的关系
-        WorkFlowFactory workFlowFactory = new WorkFlowFactory(delegator);
+        WorkFlowFactory workFlowFactory = getWorkFlowFactory(delegator);
         return workFlowFactory.getInstance(workFlowId);
+    }
+
+    public static WorkFlowFactory getWorkFlowFactory(Delegator delegator) {
+        WorkFlowFactory workFlowFactory = null;
+        Iterator<WorkFlowFactory> iter = ServiceLoader.load(WorkFlowFactory.class).iterator();
+        if (iter.hasNext()) {
+            workFlowFactory = iter.next();
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("WorkFlow factory set to " + workFlowFactory.getClass().getName(), module);
+            }
+        } else {
+            Debug.logWarning("WorkFlow factory not found", module);
+        }
+        workFlowFactory.setDelegator(delegator);
+        return workFlowFactory;
     }
 
     public static void completeActivity(Delegator delegator, String activityId, String code, String note, Map<String, Object> infoMap) {
@@ -47,7 +61,7 @@ public class WorkFlowUtil {
             e.printStackTrace();
         }
 
-        WorkFlowFactory workFlowFactory = new WorkFlowFactory(delegator);
+        WorkFlowFactory workFlowFactory = getWorkFlowFactory(delegator);
         WorkFlow workFlow = workFlowFactory.getInstance(workFlowId);
         workFlow.completeActivity(activityId, code, note, infoMap);
     }
