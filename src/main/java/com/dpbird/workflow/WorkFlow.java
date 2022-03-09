@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface WorkFlow {
+    public static String WF_STATUS_
     public String getWorkFlowId();
     /**
      * 完成当前节点
