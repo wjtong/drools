@@ -43,6 +43,6 @@ public class DefaultWorkFlow extends AbstractWorkFlow {
 
     @Override
     public void assignPartiesToActivity(Activity activity, List<String> partyLabels) {
-        
+
     }
 }
