@@ -1,6 +1,7 @@
 package com.dpbird.drools;
 
 import com.dpbird.workflow.AbstractWorkFlow;
+import com.dpbird.workflow.Activity;
 import org.apache.ofbiz.entity.Delegator;
 import org.kie.api.KieServices;
 import org.kie.api.event.rule.DebugAgendaEventListener;
@@ -8,6 +9,8 @@ import org.kie.api.event.rule.DebugRuleRuntimeEventListener;
 import org.kie.api.logger.KieRuntimeLogger;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
+
+import java.util.List;
 
 public class DefaultWorkFlow extends AbstractWorkFlow {
 
@@ -38,4 +41,8 @@ public class DefaultWorkFlow extends AbstractWorkFlow {
         ksession.dispose();
     }
 
+    @Override
+    public void assignPartiesToActivity(Activity activity, List<String> partyLabels) {
+        
+    }
 }

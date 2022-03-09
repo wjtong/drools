@@ -19,4 +19,5 @@ public interface Activity {
     public String getStatusId();
     public List<String> getAssignedPartyIds();
     public List<String> getAssignedRoleTypeIds();
+    public void assignParties(List<String> partyIds);
 }

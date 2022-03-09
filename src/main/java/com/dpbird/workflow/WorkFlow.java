@@ -23,4 +23,5 @@ public interface WorkFlow {
     public void setActiveActivity(Activity activity);
     public Activity getActiveActivity();
     public List<Activity> getActiveActivities();
+    public void assignPartiesToActivity(Activity activity, List<String> partyLabels);
 }

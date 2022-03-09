@@ -8,6 +8,7 @@ import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.util.EntityUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,8 @@ public class DefaultActivity implements Activity {
     private Delegator delegator;
     private String activityName;
     private String statusId;
+    private List<String> assignedPartyIds = new ArrayList<>();
+    private List<String> assignedRoleTypeIds = new ArrayList<>();
     private GenericValue activityGenericValue = null;
 
     public DefaultActivity(Delegator delegator, String workFlowId, String activityName) {
@@ -44,6 +47,13 @@ public class DefaultActivity implements Activity {
             } else {
                 this.activityGenericValue = EntityUtil.getFirst(activityGenericValues);
                 this.activityId = activityGenericValue.getString("workEffortId");
+            }
+            List<GenericValue> workEffortPartyAssignments = activityGenericValue.getRelated("WorkEffortPartyAssignment",
+                    UtilMisc.toMap("statusId", "PRTYASGN_ASSIGNED"), null, true);
+            if (UtilValidate.isNotEmpty(workEffortPartyAssignments)) {
+                for (GenericValue workEffortPartyAssignment:workEffortPartyAssignments) {
+                    this.assignedPartyIds.add(workEffortPartyAssignment.getString("partyId"));
+                }
             }
         } catch (GenericEntityException e) {
             e.printStackTrace();
@@ -92,11 +102,16 @@ public class DefaultActivity implements Activity {
 
     @Override
     public List<String> getAssignedPartyIds() {
-        return null;
+        return this.assignedPartyIds;
     }
 
     @Override
     public List<String> getAssignedRoleTypeIds() {
-        return null;
+        return this.assignedRoleTypeIds;
+    }
+
+    @Override
+    public void assignParties(List<String> partyIds) {
+
     }
 }
