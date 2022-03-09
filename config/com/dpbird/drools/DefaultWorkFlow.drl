@@ -6,18 +6,18 @@ dialect "java"
 
 rule "First Activity"
     when
-        $workFlow : WorkFlow(statusId == "WEPR_PLANNING")
+        $workFlow : WorkFlow(statusId == WorkFlow.WF_STATUS_PLANNING)
     then
         modify($workFlow) {
-            setStatusId("WEPR_IN_PROGRESS"),
+            setStatusId(WorkFlow.WF_STATUS_IN_PROGRESS),
             setActiveName("reviewer")
         };
 end
 
 rule "Review Activity"
     when
-        $workFlow : WorkFlow(statusId == "WEPR_IN_PROGRESS")
-        $activeActivity : Activity(statusId == "WEPR_COMPLETE", activityName == "reviewer") from $workFlow.activeActivities
+        $workFlow : WorkFlow(statusId == WorkFlow.WF_STATUS_IN_PROGRESS)
+        $activeActivity : Activity(statusId == WorkFlow.WF_STATUS_COMPLETE, activityName == "reviewer") from $workFlow.activeActivities
     then
         modify($workFlow) {
             setActiveName("approver")
@@ -26,10 +26,10 @@ end
 
 rule "Approve Activity"
     when
-        $workFlow : WorkFlow(statusId == "WEPR_IN_PROGRESS")
-        $activeActivity : Activity(statusId == "WEPR_COMPLETE", activityName == "approver") from $workFlow.activeActivities
+        $workFlow : WorkFlow(statusId == WorkFlow.WF_STATUS_IN_PROGRESS)
+        $activeActivity : Activity(statusId == WorkFlow.WF_STATUS_COMPLETE, activityName == "approver") from $workFlow.activeActivities
     then
         modify($workFlow) {
-            setStatusId("WEPR_COMPLETE")
+            setStatusId(WorkFlow.WF_STATUS_COMPLETE)
         };
 end

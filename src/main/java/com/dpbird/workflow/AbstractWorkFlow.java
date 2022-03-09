@@ -27,7 +27,7 @@ public abstract class AbstractWorkFlow implements WorkFlow {
         } catch (GenericEntityException e) {
             e.printStackTrace();
         }
-        if (statusId.equals("WEPR_PLANNING")) {
+        if (statusId.equals(WorkFlow.WF_STATUS_PLANNING)) {
             fireRules();
         }
     }

@@ -4,7 +4,12 @@ import java.util.List;
 import java.util.Map;
 
 public interface WorkFlow {
-    public static String WF_STATUS_
+    public static String WF_STATUS_PLANNING = "WEPR_PLANNING";
+    public static String WF_STATUS_IN_PROGRESS = "WEPR_IN_PROGRESS";
+    public static String WF_STATUS_COMPLETE = "WEPR_COMPLETE";
+    public static String PA_ROLE_TYPE = "WF_OWNER";
+    public static String PA_STATUS = "PRTYASGN_ASSIGNED";
+
     public String getWorkFlowId();
     /**
      * 完成当前节点

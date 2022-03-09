@@ -2,6 +2,7 @@ package com.dpbird.drools;
 
 import com.dpbird.workflow.AbstractWorkFlow;
 import com.dpbird.workflow.Activity;
+import com.dpbird.workflow.WorkFlow;
 import com.dpbird.workflow.WorkFlowUtil;
 import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.base.util.UtilValidate;
@@ -58,6 +59,6 @@ public class DefaultWorkFlow extends AbstractWorkFlow {
     @Override
     public void assignPartiesToActivity(Activity activity, List<String> partyLabels) {
         List<String> partyIds = partyLabels;
-        assignPartiesToActivity(activity, partyIds, "WF_OWNER", "PRTYASGN_ASSIGNED");
+        assignPartiesToActivity(activity, partyIds, WorkFlow.PA_ROLE_TYPE, WorkFlow.PA_STATUS);
     }
 }
