@@ -2,8 +2,9 @@ package com.dpbird.drools
 import com.dpbird.workflow.WorkFlow;
 import com.dpbird.workflow.Activity;
 
+dialect "mvel"
+
 rule "First Activity"
-    dialect "mvel"
     when
         workFlow : WorkFlow(statusId == "WEPR_PLANNING")
     then
@@ -12,7 +13,6 @@ rule "First Activity"
 end
 
 rule "Review Activity"
-    dialect "mvel"
     when
         workFlow : WorkFlow(statusId == "WEPR_IN_PROGRESS")
         activity : Activity(statusId == "WEPR_COMPLETE", activityName == "reviewer")
@@ -21,7 +21,6 @@ rule "Review Activity"
 end
 
 rule "Approve Activity"
-    dialect "mvel"
     when
         workFlow : WorkFlow(statusId == "WEPR_IN_PROGRESS")
         activity : Activity(statusId == "WEPR_COMPLETE", activityName == "approver")

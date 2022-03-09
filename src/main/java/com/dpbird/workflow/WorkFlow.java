@@ -22,4 +22,5 @@ public interface WorkFlow {
     public void setStatusId(String statusId);
     public void setActiveActivity(Activity activity);
     public Activity getActiveActivity();
+    public List<Activity> getActiveActivities();
 }
