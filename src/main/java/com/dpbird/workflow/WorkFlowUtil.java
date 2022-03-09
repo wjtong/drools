@@ -23,7 +23,7 @@ public class WorkFlowUtil {
             GenericValue workEffort = delegator.makeValue("WorkEffort",
                     UtilMisc.toMap("workEffortId", workFlowId,
                             "workEffortTypeId", "WORK_FLOW",
-                            "currentStatusId", "WEPR_PLANNING"));
+                            "currentStatusId", WorkFlow.WF_STATUS_PLANNING));
             // add more properties
             workEffort.create();
             GenericValue workEffortAttribute = delegator.makeValue("WorkEffortAttribute",

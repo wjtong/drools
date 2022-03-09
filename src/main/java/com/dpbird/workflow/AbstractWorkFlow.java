@@ -15,7 +15,6 @@ public abstract class AbstractWorkFlow implements WorkFlow {
     protected String workFlowId;
     protected Delegator delegator;
     protected GenericValue workFlowWorkEffort;
-    protected Activity activeActivity = null;
     protected List<Activity> activeActivities = new ArrayList<>();
     protected String statusId;
 
@@ -28,7 +27,7 @@ public abstract class AbstractWorkFlow implements WorkFlow {
         } catch (GenericEntityException e) {
             e.printStackTrace();
         }
-        if (statusId.equals("WEPR_PLANNING")) {
+        if (statusId.equals(WorkFlow.WF_STATUS_PLANNING)) {
             fireRules();
         }
     }
@@ -42,13 +41,16 @@ public abstract class AbstractWorkFlow implements WorkFlow {
     public void completeActivity(String activityId, String code, String note, Map<String, Object> infoMap) {
         Activity activity = new DefaultActivity(delegator, activityId);
         activity.completeActivity(code, note, infoMap);
-        this.activeActivity = activity;
         fireRules();
     }
 
     @Override
-    public String getActiveName() {
-        return this.activeActivity.getActivityName();
+    public List<String> getActiveNames() {
+        List<String> activeNames = new ArrayList<>();
+        for (Activity activity: activeActivities) {
+            activeNames.add(activity.getActivityName());
+        }
+        return activeNames;
     }
 
     @Override
@@ -59,7 +61,7 @@ public abstract class AbstractWorkFlow implements WorkFlow {
     @Override
     public void setActiveName(String activeName) {
         Activity activity = new DefaultActivity(delegator, workFlowId, activeName);
-        this.activeActivity = activity;
+//        this.activeActivity = activity;
         addActiveActivity(activity);
     }
 
@@ -76,33 +78,32 @@ public abstract class AbstractWorkFlow implements WorkFlow {
 
     @Override
     public void setActiveActivity(Activity activity) {
-        this.activeActivity = activity;
         addActiveActivity(activity);
     }
 
-    @Override
-    public Activity getActiveActivity() {
-        if (activeActivity == null) { // 查找数据库WorkEffort
-            try {
-                List<GenericValue> activityGenericValues = delegator.findByAnd("WorkEffort",
-                        UtilMisc.toMap("workEffortParentId", workFlowId,
-                                "workEffortTypeId", "ACTIVITY",
-                                "currentStatusId", "WEPR_IN_PROGRESS"),
-                        null, false);
-                if (UtilValidate.isEmpty(activityGenericValues)) {
-                    return null;
-                }
-                for (GenericValue activityGenericValue:activityGenericValues) {
-                    Activity activity = new DefaultActivity(delegator, activityGenericValue.getString("workEffortId"));
-                    addActiveActivity(activity);
-                }
-            } catch (GenericEntityException e) {
-                e.printStackTrace();
-            }
-            activeActivity = activeActivities.get(0);
-        }
-        return this.activeActivity;
-    }
+//    @Override
+//    public Activity getActiveActivity() {
+//        if (activeActivity == null) { // 查找数据库WorkEffort
+//            try {
+//                List<GenericValue> activityGenericValues = delegator.findByAnd("WorkEffort",
+//                        UtilMisc.toMap("workEffortParentId", workFlowId,
+//                                "workEffortTypeId", "ACTIVITY",
+//                                "currentStatusId", "WEPR_IN_PROGRESS"),
+//                        null, false);
+//                if (UtilValidate.isEmpty(activityGenericValues)) {
+//                    return null;
+//                }
+//                for (GenericValue activityGenericValue:activityGenericValues) {
+//                    Activity activity = new DefaultActivity(delegator, activityGenericValue.getString("workEffortId"));
+//                    addActiveActivity(activity);
+//                }
+//            } catch (GenericEntityException e) {
+//                e.printStackTrace();
+//            }
+//            activeActivity = activeActivities.get(0);
+//        }
+//        return this.activeActivity;
+//    }
 
     @Override
     public List<Activity> getActiveActivities() {
@@ -110,6 +111,11 @@ public abstract class AbstractWorkFlow implements WorkFlow {
     }
 
     protected abstract void fireRules();
+    protected abstract void assignPartiesToActivity(Activity activity);
+
+    protected void assignPartiesToActivity(Activity activity, List<String> partyIds, String roleTypeId, String statusId) {
+
+    }
 
     private void addActiveActivity(Activity activity) {
         this.activeActivities.add(activity);

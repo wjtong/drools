@@ -1,6 +1,7 @@
 package com.dpbird.drools;
 
 import com.dpbird.workflow.Activity;
+import com.dpbird.workflow.WorkFlow;
 import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.entity.Delegator;
@@ -32,7 +33,7 @@ public class DefaultActivity implements Activity {
                     null, false);
             if (UtilValidate.isEmpty(activityGenericValues)) {
                 String workEffortId = delegator.getNextSeqId("WorkEffort");
-                String currentStatusId = "WEPR_IN_PROGRESS";
+                String currentStatusId = WorkFlow.WF_STATUS_IN_PROGRESS;
                 GenericValue workEffort = delegator.makeValue("WorkEffort",
                         UtilMisc.toMap("workEffortId", workEffortId,
                                 "workEffortTypeId", "ACTIVITY",
@@ -49,7 +50,7 @@ public class DefaultActivity implements Activity {
                 this.activityId = activityGenericValue.getString("workEffortId");
             }
             List<GenericValue> workEffortPartyAssignments = activityGenericValue.getRelated("WorkEffortPartyAssignment",
-                    UtilMisc.toMap("statusId", "PRTYASGN_ASSIGNED"), null, true);
+                    UtilMisc.toMap("statusId", WorkFlow.PA_STATUS), null, true);
             if (UtilValidate.isNotEmpty(workEffortPartyAssignments)) {
                 for (GenericValue workEffortPartyAssignment:workEffortPartyAssignments) {
                     this.assignedPartyIds.add(workEffortPartyAssignment.getString("partyId"));
