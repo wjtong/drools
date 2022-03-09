@@ -2,28 +2,34 @@ package com.dpbird.drools
 import com.dpbird.workflow.WorkFlow;
 import com.dpbird.workflow.Activity;
 
-dialect "mvel"
+dialect "java"
 
 rule "First Activity"
     when
-        workFlow : WorkFlow(statusId == "WEPR_PLANNING")
+        $workFlow : WorkFlow(statusId == "WEPR_PLANNING")
     then
-        modify ( workFlow ) { statusId = "WEPR_IN_PROGRESS",
-                       activeName = "reviewer" };
+        modify($workFlow) {
+            setStatusId("WEPR_IN_PROGRESS"),
+            setActiveName("reviewer")
+        };
 end
 
 rule "Review Activity"
     when
-        workFlow : WorkFlow(statusId == "WEPR_IN_PROGRESS")
-        activity : Activity(statusId == "WEPR_COMPLETE", activityName == "reviewer")
+        $workFlow : WorkFlow(statusId == "WEPR_IN_PROGRESS")
+        $activeActivity : Activity(statusId == "WEPR_COMPLETE", activityName == "reviewer") from $workFlow.activeActivities
     then
-        modify ( workFlow ) { activeName = "approver" };
+        modify($workFlow) {
+            setActiveName("approver")
+        };
 end
 
 rule "Approve Activity"
     when
-        workFlow : WorkFlow(statusId == "WEPR_IN_PROGRESS")
-        activity : Activity(statusId == "WEPR_COMPLETE", activityName == "approver")
+        $workFlow : WorkFlow(statusId == "WEPR_IN_PROGRESS")
+        $activeActivity : Activity(statusId == "WEPR_COMPLETE", activityName == "approver") from $workFlow.activeActivities
     then
-        modify ( workFlow ) { statusId = "WEPR_COMPLETE" };
+        modify($workFlow) {
+            setStatusId("WEPR_COMPLETE")
+        };
 end

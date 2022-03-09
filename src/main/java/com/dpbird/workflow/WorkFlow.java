@@ -17,11 +17,10 @@ public interface WorkFlow {
     public void completeActivity(String activityId, String code, String note, Map<String, Object> infoMap);
 
     public String getStatusId();
-    public String getActiveName();
+    public List<String> getActiveNames();
     public void setActiveName(String activityName);
     public void setStatusId(String statusId);
     public void setActiveActivity(Activity activity);
-    public Activity getActiveActivity();
     public List<Activity> getActiveActivities();
     public void assignPartiesToActivity(Activity activity, List<String> partyLabels);
 }

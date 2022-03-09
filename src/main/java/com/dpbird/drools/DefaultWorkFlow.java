@@ -2,6 +2,9 @@ package com.dpbird.drools;
 
 import com.dpbird.workflow.AbstractWorkFlow;
 import com.dpbird.workflow.Activity;
+import com.dpbird.workflow.WorkFlowUtil;
+import org.apache.ofbiz.base.util.UtilMisc;
+import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.entity.Delegator;
 import org.kie.api.KieServices;
 import org.kie.api.event.rule.DebugAgendaEventListener;
@@ -18,6 +21,7 @@ public class DefaultWorkFlow extends AbstractWorkFlow {
         super(delegator, workFlowId);
     }
 
+    @Override
     protected void fireRules() {
         KieServices ks = KieServices.get();
         KieContainer kc = ks.getKieClasspathContainer();
@@ -30,8 +34,10 @@ public class DefaultWorkFlow extends AbstractWorkFlow {
         KieRuntimeLogger logger = ks.getLoggers().newFileLogger( ksession, "./workflow" );
 
         ksession.insert(this);
-        if (activeActivity != null) {
-            ksession.insert(activeActivity);
+        if (UtilValidate.isNotEmpty(activeActivities)) {
+            for (Activity activity:activeActivities) {
+                ksession.insert(activity);
+            }
         }
         // and fire the rules
         ksession.fireAllRules();
@@ -42,7 +48,16 @@ public class DefaultWorkFlow extends AbstractWorkFlow {
     }
 
     @Override
+    protected void assignPartiesToActivity(Activity activity) {
+        String partyId = WorkFlowUtil.getObjectAttribute(this.workFlowWorkEffort, activity.getActivityName());
+        if (partyId != null) {
+            assignPartiesToActivity(activity, UtilMisc.toList(partyId));
+        }
+    }
+
+    @Override
     public void assignPartiesToActivity(Activity activity, List<String> partyLabels) {
-        
+        List<String> partyIds = partyLabels;
+        assignPartiesToActivity(activity, partyIds, "WF_OWNER", "PRTYASGN_ASSIGNED");
     }
 }
