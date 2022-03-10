@@ -36,7 +36,7 @@ public class DefaultActivity implements Activity {
                 String currentStatusId = WorkFlow.WF_STATUS_IN_PROGRESS;
                 GenericValue workEffort = delegator.makeValue("WorkEffort",
                         UtilMisc.toMap("workEffortId", workEffortId,
-                                "workEffortTypeId", "ACTIVITY",
+                                "workEffortTypeId", WorkFlow.WF_ACTIVITY_TYPE,
                                 "currentStatusId", currentStatusId,
                                 "workEffortParentId", workFlowId,
                                 "workEffortName", activityName));

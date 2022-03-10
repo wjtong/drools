@@ -22,7 +22,7 @@ public class WorkFlowUtil {
             workFlowId = delegator.getNextSeqId("WorkEffort");
             GenericValue workEffort = delegator.makeValue("WorkEffort",
                     UtilMisc.toMap("workEffortId", workFlowId,
-                            "workEffortTypeId", "WORK_FLOW",
+                            "workEffortTypeId", WorkFlow.WF_WORKFLOW_TYPE,
                             "currentStatusId", WorkFlow.WF_STATUS_PLANNING));
             // add more properties
             workEffort.create();
