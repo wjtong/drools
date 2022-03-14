@@ -1,0 +1,24 @@
+template header
+workFlowStatusId
+activityName
+activityStatusId
+nextActivityName
+nextWorkFlowStatusId
+
+package com.dpbird.drools
+import com.dpbird.workflow.WorkFlow;
+import com.dpbird.workflow.Activity;
+
+template "Activity Flow Template"
+dialect "java"
+rule "Activity Flow_@{row.rowNumber}"
+    when
+        $workFlow : WorkFlow(statusId == @{workFlowStatusId})
+        $activeActivity : Activity(statusId == @{activityStatusId}, activityName == @{activityName}) from $workFlow.activeActivities
+    then
+        modify($workFlow) {
+            setActiveName(@{nextActivityName})
+            setStatusId(@{nextWorkFlowStatusId})
+        };
+end
+end template

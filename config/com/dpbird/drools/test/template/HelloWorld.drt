@@ -1,0 +1,23 @@
+template header
+conditionStatus
+resultStatus
+
+package com.dpbird.drools.test.template
+
+import com.dpbird.drools.test.TestEvents.Message;
+
+global java.util.List list
+
+template "Hello World Template"
+conditionStatus
+resultStatus
+
+rule "Status Change_@{row.rowNumber}"
+    dialect "mvel"
+    when
+        m : Message( status == @{conditionStatus}, message : message )
+    then
+        modify ( m ) {status = @{resultStatus}};
+        System.out.println("changed from " + @{conditionStatus} + " to " + @{resultStatus});
+end
+end template

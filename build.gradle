@@ -27,12 +27,13 @@ dependencies {
 //    pluginLibsCompile 'org.drools:drools-core:7.66.0.Final'
     pluginLibsCompile 'org.kie:kie-api:7.66.0.Final'
     pluginLibsCompile 'org.drools:drools-compiler:7.66.0.Final'
+    pluginLibsCompile 'org.drools:drools-templates:7.66.0.Final'
     pluginLibsRuntime 'org.kie:kie-api:7.66.0.Final'
+    pluginLibsRuntime 'org.drools:drools-templates:7.66.0.Final'
     pluginLibsRuntime 'org.drools:drools-core:7.66.0.Final'
     pluginLibsRuntime 'org.drools:drools-compiler:7.66.0.Final'
     pluginLibsRuntime 'org.drools:drools-traits:7.66.0.Final'
     pluginLibsRuntime 'org.drools:drools-decisiontables:7.66.0.Final'
-    pluginLibsRuntime 'org.drools:drools-templates:7.66.0.Final'
     pluginLibsRuntime 'org.kie:kie-internal:7.66.0.Final'
 }
 
