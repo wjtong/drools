@@ -2,13 +2,13 @@
 <kmodule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://www.drools.org/xsd/kmodule">
 
-    <kbase packages="com.dpbird.drools.test">
+    <kbase name="HelloWorldKB" packages="com.dpbird.drools.test">
         <ksession name="HelloWorldKS"/>
     </kbase>
-    <kbase packages="com.dpbird.drools">
+    <kbase name="WorkFlowKB" packages="com.dpbird.drools">
         <ksession name="WorkFlowKS"/>
     </kbase>
-    <kbase packages="com.dpbird.drools.test.template">
+    <kbase name="HelloWorldTemplateKB" packages="com.dpbird.drools.test.template">
         <ksession name="HelloWorldTemplateKS"/>
     </kbase>
 </kmodule>

@@ -50,7 +50,7 @@ public class TestEvents {
         // From the container, a session is created based on
         // its definition and configuration in the META-INF/kmodule.xml file
         KieSession ksession = kc.newKieSession("HelloWorldKS");
-        KieBase kieBase = kc.getKieBase();
+        KieBase kieBase = kc.getKieBase("HelloWorldKB");
 
         // Once the session is created, the application can interact with it
         // In this case it is setting a global as defined in the
@@ -132,18 +132,6 @@ public class TestEvents {
     }
 
     public static Object createWorkFlow(HttpServletRequest request, Map<String, Object> actionParameters)
-            throws GenericEntityException, GenericServiceException, CartItemModifyException {
-        Delegator delegator = (Delegator) request.getAttribute("delegator");
-        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        GenericValue userLogin = (GenericValue) request.getAttribute("userLogin");
-        String custRequestId = (String) actionParameters.get("custRequestId");
-        GenericValue custRequest = delegator.findOne("CustRequest", false, UtilMisc.toMap("custRequestId", custRequestId));
-
-        WorkFlowUtil.createWorkFlow(custRequest);
-        return null;
-    }
-
-    public static Object createWorkFlowTemplate(HttpServletRequest request, Map<String, Object> actionParameters)
             throws GenericEntityException, GenericServiceException, CartItemModifyException {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");

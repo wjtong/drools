@@ -28,4 +28,16 @@ under the License.
     <copyright></copyright>
     <version></version>
 
+    <entity entity-name="DefaultWorkFlowRule" package-name="com.dpbird.drools">
+        <field name="templateId" type="id"/>
+        <field name="ruleId" type="id"/>
+        <field name="isActive" type="indicator"/>
+        <field name="workFlowStatusId" type="id"/>
+        <field name="activityName" type="name"/>
+        <field name="activityStatusId" type="id"/>
+        <field name="nextActivityName" type="name"/>
+        <field name="nextWorkFlowStatusId" type="id"/>
+        <prim-key field="templateId"/>
+        <prim-key field="ruleId"/>
+    </entity>
 </entitymodel>
