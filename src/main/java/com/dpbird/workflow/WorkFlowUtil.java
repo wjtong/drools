@@ -26,9 +26,12 @@ public class WorkFlowUtil {
                             "currentStatusId", WorkFlow.WF_STATUS_PLANNING));
             // add more properties
             workEffort.create();
-            GenericValue workEffortAttribute = delegator.makeValue("WorkEffortAttribute",
-                    UtilMisc.toMap("workEffortId", workFlowId,
-                            "attrName", "workFlowId"));
+            String entityAttribute = genericValue.getEntityName() + "Attribute";
+            Map<String, Object> attributeKeyMap = new HashMap<>();
+            attributeKeyMap.putAll(genericValue.getPrimaryKey());
+            attributeKeyMap.put("attrName", "workFlowId");
+            attributeKeyMap.put("attrValue", workFlowId);
+            GenericValue workEffortAttribute = delegator.makeValue(entityAttribute, attributeKeyMap);
             workEffortAttribute.create();
         }
 

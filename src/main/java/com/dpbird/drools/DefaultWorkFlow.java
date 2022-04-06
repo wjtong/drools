@@ -36,7 +36,17 @@ public class DefaultWorkFlow extends AbstractWorkFlow {
     }
 
     @Override
+    protected Activity activityFromGv(GenericValue activityGv) {
+        return new DefaultActivity(delegator, activityGv.getString("workEffortId"),
+                activityGv.getString("workEffortName"),
+                activityGv.getString("currentStatusId"));
+    }
+
+    @Override
     protected void fireRules() {
+        if (statusId.equals(WorkFlow.WF_STATUS_PLANNING)) {
+            addNaActivity();
+        }
         KieServices ks = KieServices.get();
         KieContainer kc = ks.getKieClasspathContainer();
 
@@ -53,6 +63,10 @@ public class DefaultWorkFlow extends AbstractWorkFlow {
         }
         kieSession.fireAllRules();
         kieSession.dispose();
+    }
+
+    private void addNaActivity() {
+        setActiveName(WorkFlow.NAME_NA);
     }
 //    protected void fireRules() { // no template
 //        KieServices ks = KieServices.get();

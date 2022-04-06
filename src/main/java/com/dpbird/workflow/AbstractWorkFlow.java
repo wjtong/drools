@@ -24,6 +24,8 @@ public abstract class AbstractWorkFlow implements WorkFlow {
         try {
             this.workFlowWorkEffort = delegator.findOne("WorkEffort", UtilMisc.toMap("workEffortId", workFlowId), false);
             statusId = workFlowWorkEffort.getString("currentStatusId");
+            // find active activities from delegator
+            loadActiveActivities(delegator, workFlowId);
         } catch (GenericEntityException e) {
             e.printStackTrace();
         }
@@ -32,6 +34,24 @@ public abstract class AbstractWorkFlow implements WorkFlow {
         }
     }
 
+    private void loadActiveActivities(Delegator delegator, String workFlowId) {
+        try {
+            List<GenericValue> activitieGvs = delegator.findByAnd("WorkEffort",
+                    UtilMisc.toMap("workEffortParentId", workFlowId,
+                            "workEffortTypeId", "ACTIVITY",
+                            "currentStatusId", WorkFlow.WF_STATUS_IN_PROGRESS),
+                    null,
+                    false);
+            for (GenericValue activityGv:activitieGvs) {
+                addActiveActivity(activityFromGv(activityGv));
+            }
+        } catch (GenericEntityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected abstract Activity activityFromGv(GenericValue activityGv);
+
     @Override
     public String getWorkFlowId() {
         return workFlowId;
@@ -39,8 +59,13 @@ public abstract class AbstractWorkFlow implements WorkFlow {
 
     @Override
     public void completeActivity(String activityId, String code, String note, Map<String, Object> infoMap) {
-        Activity activity = new DefaultActivity(delegator, activityId);
-        activity.completeActivity(code, note, infoMap);
+//        Activity activity = new DefaultActivity(delegator, activityId);
+        for (Activity activity:activeActivities) {
+            if (activity.getActivityId().equals(activityId)) {
+                activity.completeActivity(code, note, infoMap);
+                break;
+            }
+        }
         fireRules();
     }
 
@@ -60,6 +85,7 @@ public abstract class AbstractWorkFlow implements WorkFlow {
 
     @Override
     public void setActiveName(String activeName) {
+        this.activeActivities = new ArrayList<>();
         Activity activity = new DefaultActivity(delegator, workFlowId, activeName);
 //        this.activeActivity = activity;
         addActiveActivity(activity);

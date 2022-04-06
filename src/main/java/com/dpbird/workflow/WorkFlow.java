@@ -11,6 +11,8 @@ public interface WorkFlow {
     public static String WF_ACTIVITY_TYPE = "ACTIVITY";
     public static String PA_ROLE_TYPE = "WF_OWNER";
     public static String PA_STATUS = "PRTYASGN_ASSIGNED";
+    public static String NAME_NA = "NA";
+    public static String STATUS_NA = "NA";
 
     public String getWorkFlowId();
     /**
