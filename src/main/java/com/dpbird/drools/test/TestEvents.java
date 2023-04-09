@@ -11,6 +11,7 @@ import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.order.shoppingcart.CartItemModifyException;
 import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.LocalDispatcher;
+import org.apache.olingo.commons.api.edm.EdmBindingTarget;
 import org.drools.template.DataProviderCompiler;
 import org.kie.api.KieBase;
 import org.kie.api.KieServices;
@@ -30,11 +31,11 @@ import java.util.Map;
 
 public class TestEvents {
     private static final String module = TestEvents.class.getName();
-    public static Object helloWorld(HttpServletRequest request, Map<String, Object> actionParameters)
+    public static Object helloWorld(Map<String, Object> oDataContext, Map<String, Object> actionParameters, EdmBindingTarget edmBindingTarget)
             throws GenericEntityException, GenericServiceException, CartItemModifyException {
-        Delegator delegator = (Delegator) request.getAttribute("delegator");
-        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        GenericValue userLogin = (GenericValue) request.getAttribute("userLogin");
+        Delegator delegator = (Delegator) oDataContext.get("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) oDataContext.get("dispatcher");
+        GenericValue userLogin = (GenericValue) oDataContext.get("userLogin");
         String otherParm = (String) actionParameters.get("otherParm");
         String partyId = (String) actionParameters.get("partyId");
         GenericValue party = delegator.findOne("Party", false, UtilMisc.toMap("partyId", partyId));
@@ -131,11 +132,11 @@ public class TestEvents {
         }
     }
 
-    public static Object createWorkFlow(HttpServletRequest request, Map<String, Object> actionParameters)
+    public static Object createWorkFlow(Map<String, Object> oDataContext, Map<String, Object> actionParameters, EdmBindingTarget edmBindingTarget)
             throws GenericEntityException, GenericServiceException, CartItemModifyException {
-        Delegator delegator = (Delegator) request.getAttribute("delegator");
-        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        GenericValue userLogin = (GenericValue) request.getAttribute("userLogin");
+        Delegator delegator = (Delegator) oDataContext.get("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) oDataContext.get("dispatcher");
+        GenericValue userLogin = (GenericValue) oDataContext.get("userLogin");
         String custRequestId = (String) actionParameters.get("custRequestId");
         GenericValue custRequest = delegator.findOne("CustRequest", false, UtilMisc.toMap("custRequestId", custRequestId));
 
@@ -143,11 +144,11 @@ public class TestEvents {
         return null;
     }
 
-    public static Object completeActivity(HttpServletRequest request, Map<String, Object> actionParameters)
+    public static Object completeActivity(Map<String, Object> oDataContext, Map<String, Object> actionParameters, EdmBindingTarget edmBindingTarget)
             throws GenericEntityException, GenericServiceException, CartItemModifyException {
-        Delegator delegator = (Delegator) request.getAttribute("delegator");
-        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        GenericValue userLogin = (GenericValue) request.getAttribute("userLogin");
+        Delegator delegator = (Delegator) oDataContext.get("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) oDataContext.get("dispatcher");
+        GenericValue userLogin = (GenericValue) oDataContext.get("userLogin");
         String activityId = (String) actionParameters.get("activityId");
         String code = (String) actionParameters.get("code");
         String note = (String) actionParameters.get("note");
@@ -156,11 +157,11 @@ public class TestEvents {
         return null;
     }
 
-    public static Object helloWorldDynamic(HttpServletRequest request, Map<String, Object> actionParameters)
+    public static Object helloWorldDynamic(Map<String, Object> oDataContext, Map<String, Object> actionParameters, EdmBindingTarget edmBindingTarget)
             throws GenericEntityException, GenericServiceException, CartItemModifyException {
-        Delegator delegator = (Delegator) request.getAttribute("delegator");
-        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        GenericValue userLogin = (GenericValue) request.getAttribute("userLogin");
+        Delegator delegator = (Delegator) oDataContext.get("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) oDataContext.get("dispatcher");
+        GenericValue userLogin = (GenericValue) oDataContext.get("userLogin");
         String otherParm = (String) actionParameters.get("otherParm");
         String partyId = (String) actionParameters.get("partyId");
         GenericValue party = delegator.findOne("Party", false, UtilMisc.toMap("partyId", partyId));
@@ -209,11 +210,11 @@ public class TestEvents {
         return null;
     }
 
-    public static Object helloWorldTemplate(HttpServletRequest request, Map<String, Object> actionParameters)
+    public static Object helloWorldTemplate(Map<String, Object> oDataContext, Map<String, Object> actionParameters, EdmBindingTarget edmBindingTarget)
             throws GenericEntityException, GenericServiceException, CartItemModifyException {
-        Delegator delegator = (Delegator) request.getAttribute("delegator");
-        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        GenericValue userLogin = (GenericValue) request.getAttribute("userLogin");
+        Delegator delegator = (Delegator) oDataContext.get("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) oDataContext.get("dispatcher");
+        GenericValue userLogin = (GenericValue) oDataContext.get("userLogin");
         String otherParm = (String) actionParameters.get("otherParm");
         String partyId = (String) actionParameters.get("partyId");
         GenericValue party = delegator.findOne("Party", false, UtilMisc.toMap("partyId", partyId));
