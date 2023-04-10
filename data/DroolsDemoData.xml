@@ -19,5 +19,20 @@ under the License.
 -->
 
 <entity-engine-xml>
+    <DefaultWorkFlowRule templateId="9000" ruleId="100" isActive="Y" workFlowStatusId="WF_STATUS_PLANNING"
+                         activityName="First step" activityStatusId="WF_STATUS_PLANNING"
+                         nextActivityName="Second step" nextWorkFlowStatusId="WEPR_IN_PROGRESS"/>
+    <DefaultWorkFlowRule templateId="9000" ruleId="110" isActive="Y" workFlowStatusId="WEPR_IN_PROGRESS"
+                         activityName="Second step" activityStatusId="WEPR_IN_PROGRESS"
+                         nextActivityName="Third step" nextWorkFlowStatusId="WEPR_IN_PROGRESS"/>
+    <DefaultWorkFlowRule templateId="9000" ruleId="120" isActive="Y" workFlowStatusId="WEPR_IN_PROGRESS"
+                         activityName="Third step" activityStatusId="WEPR_IN_PROGRESS"
+                         nextActivityName="Fourth step" nextWorkFlowStatusId="WEPR_IN_PROGRESS"/>
+    <DefaultWorkFlowRule templateId="9000" ruleId="130" isActive="Y" workFlowStatusId="WEPR_IN_PROGRESS"
+                         activityName="Fourth step" activityStatusId="WEPR_IN_PROGRESS"
+                         nextActivityName="Final step" nextWorkFlowStatusId="WEPR_IN_PROGRESS"/>
+    <DefaultWorkFlowRule templateId="9000" ruleId="130" isActive="Y" workFlowStatusId="WEPR_IN_PROGRESS"
+                         activityName="Final step" activityStatusId="WEPR_IN_PROGRESS"
+                         nextWorkFlowStatusId="WEPR_COMPLETE"/>
 
 </entity-engine-xml>
