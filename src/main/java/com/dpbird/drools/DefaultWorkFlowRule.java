@@ -6,13 +6,16 @@ public class DefaultWorkFlowRule {
     private String activityStatusId;
     private String nextActivityName;
     private String nextWorkFlowStatusId;
+    private String nextActivityAssignee;
 
-    public DefaultWorkFlowRule(String workFlowStatusId, String activityName, String activityStatusId, String nextActivityName, String nextWorkFlowStatusId) {
+    public DefaultWorkFlowRule(String workFlowStatusId, String activityName, String activityStatusId,
+                               String nextActivityName, String nextWorkFlowStatusId, String nextActivityAssignee) {
         this.workFlowStatusId = workFlowStatusId;
         this.activityName = activityName;
         this.activityStatusId = activityStatusId;
         this.nextActivityName = nextActivityName;
         this.nextWorkFlowStatusId = nextWorkFlowStatusId;
+        this.nextActivityAssignee = nextActivityAssignee;
     }
 
     public String getActivityName() {

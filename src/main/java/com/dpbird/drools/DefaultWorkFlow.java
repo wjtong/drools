@@ -125,7 +125,8 @@ public class DefaultWorkFlow extends AbstractWorkFlow {
                     ruleParam.getString("activityName"),
                     ruleParam.getString("activityStatusId"),
                     ruleParam.getString("nextActivityName"),
-                    ruleParam.getString("nextWorkFlowStatusId")));
+                    ruleParam.getString("nextWorkFlowStatusId"),
+                    ruleParam.getString("nextActivityAssignee")));
         }
         DefaultDataProvider dataProvider = new DefaultDataProvider(rules);
         final DataProviderCompiler converter = new DataProviderCompiler();
