@@ -1,6 +1,8 @@
 package com.dpbird.workflow;
 
 import com.dpbird.drools.DefaultActivity;
+import com.dpbird.drools.DefaultWorkFlow;
+import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.UtilDateTime;
 import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.base.util.UtilValidate;
@@ -13,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractWorkFlow implements WorkFlow {
+    private final static String module = AbstractWorkFlow.class.getName();
+
     protected String workFlowId;
     protected Delegator delegator;
     protected GenericValue workFlowWorkEffort;
@@ -37,10 +41,15 @@ public abstract class AbstractWorkFlow implements WorkFlow {
 
     private void loadActiveActivities(Delegator delegator, String workFlowId) {
         try {
+//            List<GenericValue> activitieGvs = delegator.findByAnd("WorkEffort",
+//                    UtilMisc.toMap("workEffortParentId", workFlowId,
+//                            "workEffortTypeId", "ACTIVITY",
+//                            "currentStatusId", WorkFlow.WF_STATUS_IN_PROGRESS),
+//                    null,
+//                    false);
             List<GenericValue> activitieGvs = delegator.findByAnd("WorkEffort",
                     UtilMisc.toMap("workEffortParentId", workFlowId,
-                            "workEffortTypeId", "ACTIVITY",
-                            "currentStatusId", WorkFlow.WF_STATUS_IN_PROGRESS),
+                            "workEffortTypeId", "ACTIVITY"),
                     null,
                     false);
             for (GenericValue activityGv:activitieGvs) {
@@ -87,15 +96,20 @@ public abstract class AbstractWorkFlow implements WorkFlow {
     @Override
     public void setActiveName(String activeName) {
         this.activeActivities = new ArrayList<>();
-        Activity activity = new DefaultActivity(delegator, workFlowId, activeName);
+        Activity activity = new DefaultActivity(delegator, workFlowId, activeName, WorkFlow.NAME_NA);
 //        this.activeActivity = activity;
         addActiveActivity(activity);
     }
 
     @Override
-    public void setActiveName(String activeName, String assignee) {
-        this.activeActivities = new ArrayList<>();
-        Activity activity = new DefaultActivity(delegator, workFlowId, activeName);
+    public void setActiveName(String activeName, String assignee, String waitLock) {
+        if (UtilValidate.isEmpty(this.activeActivities)) {
+            this.activeActivities = new ArrayList<>();
+        }
+        Activity activity = new DefaultActivity(delegator, workFlowId, activeName, waitLock);
+        if (UtilValidate.isNotEmpty(waitLock)) {
+            activity.setWaitLock(waitLock);
+        }
 //        this.activeActivity = activity;
         addActiveActivity(activity);
         assignPartiesToActivity(activity, UtilMisc.toList(assignee));
@@ -175,4 +189,42 @@ public abstract class AbstractWorkFlow implements WorkFlow {
         this.activeActivities.add(activity);
     }
 
+    @Override
+    public boolean noActive(String activityName) {
+        Debug.logInfo("------------------------------------ noActive " + activityName, module);
+        if (UtilValidate.isEmpty(this.activeActivities)) {
+            return true;
+        }
+        for (Activity activity:this.activeActivities) {
+            if (activity.getActivityName().equals(activityName)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean checkWaitLock(String activityName) {
+
+        String waitLock = WorkFlow.NAME_NA;
+        if (UtilValidate.isEmpty(this.activeActivities)) {
+            return true;
+        }
+        for (Activity activity:this.activeActivities) {
+            if (activity.getActivityName().equals(activityName)) {
+                waitLock = activity.getWaitLock();
+            }
+        }
+        if (waitLock.equals(WorkFlow.NAME_NA)) {
+            return true;
+        }
+        for (Activity activity:this.activeActivities) {
+            if (waitLock.equals(activity.getWaitLock())) {
+                if (!activity.getStatusId().equals(WorkFlow.WF_STATUS_COMPLETE)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }

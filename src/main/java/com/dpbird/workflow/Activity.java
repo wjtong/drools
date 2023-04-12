@@ -20,4 +20,6 @@ public interface Activity {
     public List<String> getAssignedPartyIds();
     public List<String> getAssignedRoleTypeIds();
     public void assignParties(List<String> partyIds);
+    public void setWaitLock(String waitLock);
+    public String getWaitLock();
 }

@@ -16,13 +16,15 @@ public abstract class AbstractActivity implements Activity {
     protected Delegator delegator;
     protected String activityName;
     protected String statusId;
+    protected String waitLock = WorkFlow.NAME_NA;
     protected List<String> assignedPartyIds = new ArrayList<>();
     protected List<String> assignedRoleTypeIds = new ArrayList<>();
     protected GenericValue activityGenericValue = null;
 
-    public AbstractActivity(Delegator delegator, String workFlowId, String activityName) {
+    public AbstractActivity(Delegator delegator, String workFlowId, String activityName, String waitLock) {
         this.delegator = delegator;
         this.activityName = activityName;
+        this.waitLock = waitLock;
     }
 
     protected void createActivityWorkEffort(String workFlowId) {
@@ -40,7 +42,8 @@ public abstract class AbstractActivity implements Activity {
                                 "workEffortTypeId", WorkFlow.WF_ACTIVITY_TYPE,
                                 "currentStatusId", currentStatusId,
                                 "workEffortParentId", workFlowId,
-                                "workEffortName", activityName));
+                                "workEffortName", activityName,
+                                "showAsEnumId", waitLock));
                 // add more properties
                 workEffort.create();
                 this.activityId = workEffortId;
@@ -115,5 +118,15 @@ public abstract class AbstractActivity implements Activity {
     @Override
     public void assignParties(List<String> partyIds) {
 
+    }
+
+    @Override
+    public void setWaitLock(String waitLock) {
+        this.waitLock = waitLock;
+    }
+
+    @Override
+    public String getWaitLock() {
+        return this.waitLock;
     }
 }

@@ -21,7 +21,10 @@ under the License.
 <entity-engine-xml>
     <DefaultWorkFlowRule templateId="DefaultWorkFlow" ruleId="100" isActive="Y" workFlowStatusId="WEPR_IN_PROGRESS"
                          activityName="First step" activityStatusId="WEPR_COMPLETE" nextActivityAssignee="ltdadmin"
-                         nextActivityName="Second step" nextWorkFlowStatusId="WEPR_IN_PROGRESS"/>
+                         nextActivityName="Second step" nextWorkFlowStatusId="WEPR_IN_PROGRESS" waitLock="lock1"/>
+    <DefaultWorkFlowRule templateId="DefaultWorkFlow" ruleId="105" isActive="Y" workFlowStatusId="WEPR_IN_PROGRESS"
+                         activityName="First step" activityStatusId="WEPR_COMPLETE" nextActivityAssignee="externaluser"
+                         nextActivityName="Another Second step" nextWorkFlowStatusId="WEPR_IN_PROGRESS" waitLock="lock1"/>
     <DefaultWorkFlowRule templateId="DefaultWorkFlow" ruleId="110" isActive="Y" workFlowStatusId="WEPR_IN_PROGRESS"
                          activityName="Second step" activityStatusId="WEPR_COMPLETE" nextActivityAssignee="ltdadmin1"
                          nextActivityName="Third step" nextWorkFlowStatusId="WEPR_IN_PROGRESS"/>

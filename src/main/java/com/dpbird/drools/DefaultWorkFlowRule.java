@@ -1,5 +1,8 @@
 package com.dpbird.drools;
 
+import com.dpbird.workflow.WorkFlow;
+import org.apache.ofbiz.base.util.UtilValidate;
+
 public class DefaultWorkFlowRule {
     private String workFlowStatusId;
     private String activityName;
@@ -7,15 +10,18 @@ public class DefaultWorkFlowRule {
     private String nextActivityName;
     private String nextWorkFlowStatusId;
     private String nextActivityAssignee;
+    private String waitLock;
 
     public DefaultWorkFlowRule(String workFlowStatusId, String activityName, String activityStatusId,
-                               String nextActivityName, String nextWorkFlowStatusId, String nextActivityAssignee) {
+                               String nextActivityName, String nextWorkFlowStatusId,
+                               String nextActivityAssignee, String waitLock) {
         this.workFlowStatusId = workFlowStatusId;
         this.activityName = activityName;
         this.activityStatusId = activityStatusId;
         this.nextActivityName = nextActivityName;
         this.nextWorkFlowStatusId = nextWorkFlowStatusId;
         this.nextActivityAssignee = nextActivityAssignee;
+        this.waitLock = waitLock;
     }
 
     public String getActivityName() {
@@ -64,5 +70,16 @@ public class DefaultWorkFlowRule {
 
     public void setNextActivityAssignee(String nextActivityAssignee) {
         this.nextActivityAssignee = nextActivityAssignee;
+    }
+
+    public String getWaitLock() {
+        if (UtilValidate.isEmpty(this.waitLock)) {
+            return WorkFlow.NAME_NA;
+        }
+        return waitLock;
+    }
+
+    public void setWaitLock(String waitLock) {
+        this.waitLock = waitLock;
     }
 }

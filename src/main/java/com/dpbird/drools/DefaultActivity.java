@@ -16,8 +16,8 @@ import java.util.Map;
 
 public class DefaultActivity extends AbstractActivity {
 
-    public DefaultActivity(Delegator delegator, String workFlowId, String activityName) {
-        super(delegator, workFlowId, activityName);
+    public DefaultActivity(Delegator delegator, String workFlowId, String activityName, String waitLock) {
+        super(delegator, workFlowId, activityName, waitLock);
         if (activityName.equals(WorkFlow.NAME_NA)) {
             this.statusId = WorkFlow.STATUS_NA;
         } else {
@@ -29,12 +29,13 @@ public class DefaultActivity extends AbstractActivity {
         super(delegator, activityId);
     }
 
-    public DefaultActivity(Delegator delegator, String activityId, String activityName, String statusId) {
+    public DefaultActivity(Delegator delegator, String activityId, String activityName, String statusId, String waitLock) {
         super(delegator, activityId);
         this.delegator = delegator;
         this.activityId = activityId;
         this.activityName = activityName;
         this.statusId = statusId;
+        this.waitLock = waitLock;
     }
 
 }

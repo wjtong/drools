@@ -39,7 +39,8 @@ public class DefaultWorkFlow extends AbstractWorkFlow {
     protected Activity activityFromGv(GenericValue activityGv) {
         return new DefaultActivity(delegator, activityGv.getString("workEffortId"),
                 activityGv.getString("workEffortName"),
-                activityGv.getString("currentStatusId"));
+                activityGv.getString("currentStatusId"),
+                activityGv.getString("showAsEnumId"));
     }
 
     @Override
@@ -131,7 +132,8 @@ public class DefaultWorkFlow extends AbstractWorkFlow {
                     ruleParam.getString("activityStatusId"),
                     ruleParam.getString("nextActivityName"),
                     ruleParam.getString("nextWorkFlowStatusId"),
-                    ruleParam.getString("nextActivityAssignee")));
+                    ruleParam.getString("nextActivityAssignee"),
+                    ruleParam.getString("waitLock")));
         }
         DefaultDataProvider dataProvider = new DefaultDataProvider(rules);
         final DataProviderCompiler converter = new DataProviderCompiler();

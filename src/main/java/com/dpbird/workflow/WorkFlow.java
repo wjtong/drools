@@ -29,9 +29,11 @@ public interface WorkFlow {
     public String getStatusId();
     public List<String> getActiveNames();
     public void setActiveName(String activityName);
-    public void setActiveName(String activityName, String assignee);
+    public void setActiveName(String activityName, String assignee, String waitLock);
     public void setStatusId(String statusId);
     public void setActiveActivity(Activity activity);
     public List<Activity> getActiveActivities();
     public void assignPartiesToActivity(Activity activity, List<String> partyLabels);
+    public boolean noActive(String activityName);
+    public boolean checkWaitLock(String activityName);
 }

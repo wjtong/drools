@@ -5,6 +5,7 @@ activityStatusId
 nextActivityName
 nextWorkFlowStatusId
 nextActivityAssignee
+waitLock
 
 package com.dpbird.drools
 import com.dpbird.workflow.WorkFlow;
@@ -16,9 +17,10 @@ dialect "java"
     when
         $workFlow : WorkFlow(statusId == "@{workFlowStatusId}")
         $activeActivity : Activity(statusId == "@{activityStatusId}", activityName == "@{activityName}") from $workFlow.activeActivities
+        eval($workFlow.noActive("@{nextActivityName}") && $workFlow.checkWaitLock("@{activityName}"))
     then
         modify($workFlow) {
-            setActiveName("@{nextActivityName}", "@{nextActivityAssignee}"),
+            setActiveName("@{nextActivityName}", "@{nextActivityAssignee}", "@{waitLock}"),
             setStatusId("@{nextWorkFlowStatusId}")
         };
 end

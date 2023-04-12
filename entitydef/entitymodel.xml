@@ -38,6 +38,7 @@ under the License.
         <field name="nextActivityName" type="name"/>
         <field name="nextWorkFlowStatusId" type="id"/>
         <field name="nextActivityAssignee" type="id"/>
+        <field name="waitLock" type="id"/>
         <prim-key field="templateId"/>
         <prim-key field="ruleId"/>
     </entity>
