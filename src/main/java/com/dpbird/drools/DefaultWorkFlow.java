@@ -93,18 +93,23 @@ public class DefaultWorkFlow extends AbstractWorkFlow {
 //        ksession.dispose();
 //    }
 
-    @Override
-    protected void assignPartiesToActivity(Activity activity) {
-        String partyId = WorkFlowUtil.getObjectAttribute(this.workFlowWorkEffort, activity.getActivityName());
-        if (partyId != null) {
-            assignPartiesToActivity(activity, UtilMisc.toList(partyId));
-        }
-    }
+//    @Override
+//    protected void assignPartiesToActivity(Activity activity) {
+//        String partyId = WorkFlowUtil.getObjectAttribute(this.workFlowWorkEffort, activity.getActivityName());
+//        if (partyId != null) {
+//            assignPartiesToActivity(activity, UtilMisc.toList(partyId));
+//        }
+//    }
 
     @Override
     public void assignPartiesToActivity(Activity activity, List<String> partyLabels) {
         List<String> partyIds = partyLabels;
-        assignPartiesToActivity(activity, partyIds, WorkFlow.PA_ROLE_TYPE, WorkFlow.PA_STATUS);
+        try {
+            assignPartiesToActivityWithRole(activity, partyIds, WorkFlow.PA_ROLE_TYPE, WorkFlow.PA_STATUS);
+        } catch (GenericEntityException e) {
+            e.printStackTrace();
+            // TODO: will be handled later
+        }
     }
 
     private String compileRules() {

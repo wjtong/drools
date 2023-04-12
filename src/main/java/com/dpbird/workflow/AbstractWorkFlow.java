@@ -1,6 +1,7 @@
 package com.dpbird.workflow;
 
 import com.dpbird.drools.DefaultActivity;
+import org.apache.ofbiz.base.util.UtilDateTime;
 import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.entity.Delegator;
@@ -92,6 +93,15 @@ public abstract class AbstractWorkFlow implements WorkFlow {
     }
 
     @Override
+    public void setActiveName(String activeName, String assignee) {
+        this.activeActivities = new ArrayList<>();
+        Activity activity = new DefaultActivity(delegator, workFlowId, activeName);
+//        this.activeActivity = activity;
+        addActiveActivity(activity);
+        assignPartiesToActivity(activity, UtilMisc.toList(assignee));
+    }
+
+    @Override
     public void setStatusId(String statusId) {
         this.statusId = statusId;
         workFlowWorkEffort.put("currentStatusId", statusId);
@@ -137,9 +147,27 @@ public abstract class AbstractWorkFlow implements WorkFlow {
     }
 
     protected abstract void fireRules();
-    protected abstract void assignPartiesToActivity(Activity activity);
+//    protected abstract void assignPartiesToActivity(Activity activity);
 
-    protected void assignPartiesToActivity(Activity activity, List<String> partyIds, String roleTypeId, String statusId) {
+    protected void assignPartiesToActivityWithRole(Activity activity, List<String> partyIds, String roleTypeId, String statusId)
+            throws GenericEntityException {
+        for (String partyId:partyIds) {
+            // 先检查这个Party是否有这个Role，如果没有就添加一个
+            Map<String, Object> partyRoleKeyMap = UtilMisc.toMap("partyId", partyId, "roleTypeId", roleTypeId);
+            GenericValue partyRole = delegator.findOne("PartyRole", partyRoleKeyMap, true);
+            if (UtilValidate.isEmpty(partyRole)) {
+                partyRole = delegator.makeValidValue("PartyRole", partyRoleKeyMap);
+                partyRole.create();
+            }
+            GenericValue workEffortPartyAssignment = delegator.makeValue("WorkEffortPartyAssignment",
+                    UtilMisc.toMap("workEffortId", activity.getActivityId(),
+                            "partyId", partyId,
+                            "roleTypeId", roleTypeId,
+                            "statusId", statusId,
+                            "fromDate", UtilDateTime.nowTimestamp()));
+            // add more properties
+            workEffortPartyAssignment.create();
+        }
 
     }
 

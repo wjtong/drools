@@ -4,6 +4,7 @@ activityName
 activityStatusId
 nextActivityName
 nextWorkFlowStatusId
+nextActivityAssignee
 
 package com.dpbird.drools
 import com.dpbird.workflow.WorkFlow;
@@ -17,7 +18,7 @@ dialect "java"
         $activeActivity : Activity(statusId == "@{activityStatusId}", activityName == "@{activityName}") from $workFlow.activeActivities
     then
         modify($workFlow) {
-            setActiveName("@{nextActivityName}"),
+            setActiveName("@{nextActivityName}", "@{nextActivityAssignee}"),
             setStatusId("@{nextWorkFlowStatusId}")
         };
 end

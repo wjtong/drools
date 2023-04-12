@@ -57,4 +57,12 @@ public class DefaultWorkFlowRule {
     public void setNextActivityName(String nextActivityName) {
         this.nextActivityName = nextActivityName;
     }
+
+    public String getNextActivityAssignee() {
+        return nextActivityAssignee;
+    }
+
+    public void setNextActivityAssignee(String nextActivityAssignee) {
+        this.nextActivityAssignee = nextActivityAssignee;
+    }
 }

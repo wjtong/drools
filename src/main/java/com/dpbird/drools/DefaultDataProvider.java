@@ -26,7 +26,8 @@ public class DefaultDataProvider implements DataProvider {
                 nextRule.getActivityName(),
                 nextRule.getActivityStatusId(),
                 nextRule.getNextActivityName(),
-                nextRule.getNextWorkFlowStatusId()
+                nextRule.getNextWorkFlowStatusId(),
+                nextRule.getNextActivityAssignee()
         };
         return row;
     }

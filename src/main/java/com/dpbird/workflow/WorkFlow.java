@@ -29,6 +29,7 @@ public interface WorkFlow {
     public String getStatusId();
     public List<String> getActiveNames();
     public void setActiveName(String activityName);
+    public void setActiveName(String activityName, String assignee);
     public void setStatusId(String statusId);
     public void setActiveActivity(Activity activity);
     public List<Activity> getActiveActivities();
