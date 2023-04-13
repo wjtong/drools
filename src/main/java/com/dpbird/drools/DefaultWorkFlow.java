@@ -120,7 +120,7 @@ public class DefaultWorkFlow extends AbstractWorkFlow {
         List<GenericValue> ruleParams;
         try {
             ruleParams = delegator.findByAnd("DefaultWorkFlowRule",
-                    UtilMisc.toMap("templateId", templateId, "isActive", "Y"),
+                    UtilMisc.toMap("ruleTemplateId", templateId, "isActive", "Y"),
                     null, true);
         } catch (GenericEntityException e) {
             e.printStackTrace();

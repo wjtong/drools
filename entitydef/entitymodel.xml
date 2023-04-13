@@ -28,9 +28,27 @@ under the License.
     <copyright></copyright>
     <version></version>
 
+    <entity entity-name="RuleTemplateType" package-name="com.dpbird.drools">
+        <field name="ruleTemplateTypeId" type="id"/>
+        <field name="description" type="description"/>
+        <prim-key field="ruleTemplateTypeId"/>
+    </entity>
+    <entity entity-name="RuleTemplate" package-name="com.dpbird.drools">
+        <field name="ruleTemplateId" type="id"/>
+        <field name="templateTypeId" type="id"/>
+        <field name="templateName" type="name"/>
+        <field name="description" type="description"/>
+        <prim-key field="ruleTemplateId"/>
+        <relation type="one" fk-name="RLTMPLATE_TYPE" rel-entity-name="RuleTemplateType">
+            <key-map field-name="templateTypeId"/>
+        </relation>
+        <relation type="many" rel-entity-name="DefaultWorkFlowRule">
+            <key-map field-name="ruleTemplateId"/>
+        </relation>
+    </entity>
     <entity entity-name="DefaultWorkFlowRule" package-name="com.dpbird.drools">
-        <field name="templateId" type="id"/>
         <field name="ruleId" type="id"/>
+        <field name="ruleTemplateId" type="id"/>
         <field name="isActive" type="indicator"/>
         <field name="workFlowStatusId" type="id"/>
         <field name="activityName" type="name"/>
@@ -39,7 +57,9 @@ under the License.
         <field name="nextWorkFlowStatusId" type="id"/>
         <field name="nextActivityAssignee" type="id"/>
         <field name="waitLock" type="id"/>
-        <prim-key field="templateId"/>
         <prim-key field="ruleId"/>
+        <relation type="one" fk-name="DFLT_WFRL_TMPLTE" rel-entity-name="RuleTemplate">
+            <key-map field-name="ruleTemplateId"/>
+        </relation>
     </entity>
 </entitymodel>
