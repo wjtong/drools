@@ -78,16 +78,17 @@ public abstract class AbstractActivity implements Activity {
     }
 
     @Override
-    public void completeActivity(String code, String note, Map<String, Object> infoMap) {
+    public GenericValue completeActivity(String code, String note, Map<String, Object> infoMap) {
         try {
             activityGenericValue.put("currentStatusId", code);
+            activityGenericValue.put("description", note);
             // add note
             activityGenericValue.store();
             statusId = code;
         } catch (GenericEntityException e) {
             e.printStackTrace();
         }
-
+        return activityGenericValue;
     }
 
     @Override

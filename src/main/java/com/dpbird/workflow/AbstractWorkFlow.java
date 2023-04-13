@@ -68,15 +68,17 @@ public abstract class AbstractWorkFlow implements WorkFlow {
     }
 
     @Override
-    public void completeActivity(String activityId, String code, String note, Map<String, Object> infoMap) {
+    public GenericValue completeActivity(String activityId, String code, String note, Map<String, Object> infoMap) {
 //        Activity activity = new DefaultActivity(delegator, activityId);
+        GenericValue activityGv = null;
         for (Activity activity:activeActivities) {
             if (activity.getActivityId().equals(activityId)) {
-                activity.completeActivity(code, note, infoMap);
+                activityGv = activity.completeActivity(code, note, infoMap);
                 break;
             }
         }
         fireRules();
+        return activityGv;
     }
 
     @Override

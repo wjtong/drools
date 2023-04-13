@@ -1,5 +1,7 @@
 package com.dpbird.workflow;
 
+import org.apache.ofbiz.entity.GenericValue;
+
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +14,7 @@ public interface Activity {
      * @param infoMap 其它参数
      * @return String 下一个节点的workEffortId
      */
-    public void completeActivity(String code, String note, Map<String, Object> infoMap);
+    public GenericValue completeActivity(String code, String note, Map<String, Object> infoMap);
 
     public String getActivityName();
     public String getActivityId();

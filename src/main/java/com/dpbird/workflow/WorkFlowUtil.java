@@ -1,9 +1,9 @@
 package com.dpbird.workflow;
 
+import com.banfftech.common.util.CommonUtils;
 import org.apache.ofbiz.base.util.*;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
-import org.apache.ofbiz.entity.GenericPK;
 import org.apache.ofbiz.entity.GenericValue;
 
 import java.util.*;
@@ -26,13 +26,10 @@ public class WorkFlowUtil {
                             "currentStatusId", WorkFlow.WF_STATUS_PLANNING));
             // add more properties
             workEffort.create();
-            String entityAttribute = genericValue.getEntityName() + "Attribute";
-            Map<String, Object> attributeKeyMap = new HashMap<>();
-            attributeKeyMap.putAll(genericValue.getPrimaryKey());
-            attributeKeyMap.put("attrName", "workFlowId");
-            attributeKeyMap.put("attrValue", workFlowId);
-            GenericValue workEffortAttribute = delegator.makeValue(entityAttribute, attributeKeyMap);
-            workEffortAttribute.create();
+
+            // set the target genericValue's workFlowId
+            genericValue.put("workFlowId", workFlowId);
+            genericValue.store();
         }
 
         // 保存genericValue和WorkEffort(workflow)之间的关系
@@ -55,41 +52,23 @@ public class WorkFlowUtil {
         return workFlowFactory;
     }
 
-    public static void completeActivity(Delegator delegator, String activityId, String code, String note, Map<String, Object> infoMap) {
+    public static GenericValue completeActivity(Delegator delegator, String activityId, String code, String note, Map<String, Object> infoMap) {
         String workFlowId = null;
+        GenericValue activityGenericValue = null;
         try {
-            GenericValue activityGenericValue = delegator.findOne("WorkEffort", UtilMisc.toMap("workEffortId", activityId), true);
+            activityGenericValue = delegator.findOne("WorkEffort", UtilMisc.toMap("workEffortId", activityId), true);
             workFlowId = activityGenericValue.getString("workEffortParentId");
         } catch (GenericEntityException e) {
             e.printStackTrace();
         }
-
         WorkFlowFactory workFlowFactory = getWorkFlowFactory(delegator);
         WorkFlow workFlow = workFlowFactory.getInstance(workFlowId);
         workFlow.completeActivity(activityId, code, note, infoMap);
+        return activityGenericValue;
     }
 
     public static String getObjectWorkFlowId(GenericValue genericValue) {
-        return getObjectAttribute(genericValue, "workFlowId");
+        return genericValue.getString("workFlowId");
     }
 
-    public static String getObjectAttribute(GenericValue genericValue, String attrName) {
-        Delegator delegator = genericValue.getDelegator();
-        String attrEntityName = genericValue.getEntityName() + "Attribute";
-        GenericPK genericPK = genericValue.getPrimaryKey();
-        Map<String, Object> fieldCondition = new HashMap<>();
-        fieldCondition.putAll(genericPK);
-        fieldCondition.put("attrName", attrName);
-        try {
-            GenericValue attribute = delegator.findOne(attrEntityName, fieldCondition, false);
-            if (attribute == null) {
-                return null;
-            } else {
-                return attribute.getString("attrValue");
-            }
-        } catch (GenericEntityException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 }
